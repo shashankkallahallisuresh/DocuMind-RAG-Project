@@ -51,7 +51,9 @@ async def chat(request: ChatRequest, req: Request):
 
             full_response = ""
             async for token in llm_service.stream_response(
-                request.message, context, capped_history, api_key
+                request.message, context, capped_history, api_key,
+                provider=request.provider or "openrouter",
+                model=request.model,
             ):
                 full_response += token
                 yield f"data: {json.dumps({'type': 'token', 'data': token})}\n\n"

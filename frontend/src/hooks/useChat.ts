@@ -11,7 +11,13 @@ export interface Message {
   isStreaming?: boolean;
 }
 
-export function useChat(sessionId: string, apiKey?: string) {
+export interface ApiConfig {
+  apiKey: string;
+  provider: string;
+  model: string;
+}
+
+export function useChat(sessionId: string, config?: ApiConfig) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,23 +29,15 @@ export function useChat(sessionId: string, apiKey?: string) {
       setError(null);
       setIsLoading(true);
 
-      // Append user message
       setMessages((prev) => [
         ...prev,
         { id: crypto.randomUUID(), role: "user", content },
       ]);
 
-      // Append placeholder assistant message
       const assistantId = crypto.randomUUID();
       setMessages((prev) => [
         ...prev,
-        {
-          id: assistantId,
-          role: "assistant",
-          content: "",
-          sources: [],
-          isStreaming: true,
-        },
+        { id: assistantId, role: "assistant", content: "", sources: [], isStreaming: true },
       ]);
 
       try {
@@ -48,25 +46,17 @@ export function useChat(sessionId: string, apiKey?: string) {
           content,
           (token) => {
             setMessages((prev) =>
-              prev.map((m) =>
-                m.id === assistantId
-                  ? { ...m, content: m.content + token }
-                  : m
-              )
+              prev.map((m) => m.id === assistantId ? { ...m, content: m.content + token } : m)
             );
           },
           (sources) => {
             setMessages((prev) =>
-              prev.map((m) =>
-                m.id === assistantId ? { ...m, sources } : m
-              )
+              prev.map((m) => m.id === assistantId ? { ...m, sources } : m)
             );
           },
           () => {
             setMessages((prev) =>
-              prev.map((m) =>
-                m.id === assistantId ? { ...m, isStreaming: false } : m
-              )
+              prev.map((m) => m.id === assistantId ? { ...m, isStreaming: false } : m)
             );
             setIsLoading(false);
           },
@@ -75,15 +65,17 @@ export function useChat(sessionId: string, apiKey?: string) {
             setMessages((prev) => prev.filter((m) => m.id !== assistantId));
             setIsLoading(false);
           },
-          apiKey
+          config?.apiKey,
+          config?.provider,
+          config?.model,
         );
-      } catch (err) {
+      } catch {
         setError("Connection failed. Is the backend running?");
         setMessages((prev) => prev.filter((m) => m.id !== assistantId));
         setIsLoading(false);
       }
     },
-    [sessionId, isLoading, apiKey]
+    [sessionId, isLoading, config]
   );
 
   const clearMessages = useCallback(() => setMessages([]), []);

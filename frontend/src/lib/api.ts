@@ -21,12 +21,14 @@ export async function sendChatMessage(
   onSources: (sources: Source[]) => void,
   onDone: () => void,
   onError: (msg: string) => void,
-  apiKey?: string
+  apiKey?: string,
+  provider?: string,
+  model?: string,
 ): Promise<void> {
   const response = await fetch(`${API_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ session_id: sessionId, message, api_key: apiKey }),
+    body: JSON.stringify({ session_id: sessionId, message, api_key: apiKey, provider, model }),
   });
 
   if (!response.ok) {

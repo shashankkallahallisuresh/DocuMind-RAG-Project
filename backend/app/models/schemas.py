@@ -6,6 +6,8 @@ class ChatRequest(BaseModel):
     session_id: str
     message: str
     api_key: Optional[str] = None
+    provider: Optional[str] = "openrouter"
+    model: Optional[str] = None
 
 
 class Source(BaseModel):
