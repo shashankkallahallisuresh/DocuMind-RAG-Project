@@ -38,11 +38,11 @@ async def chat(request: ChatRequest, req: Request):
     sources = vector_store.search(query_embedding, top_k=settings.TOP_K_CHUNKS)
     context = format_context(sources)
 
-    api_key = request.api_key or get_settings().OPENROUTER_API_KEY
+    api_key = (request.api_key or "").strip()
     if not api_key:
         async def no_key():
-            yield f"data: {json.dumps({'type': 'error', 'data': 'No API key provided. Please configure your OpenRouter API key.'})}\n\n"
-        return StreamingResponse(no_key(), media_type="text/event-stream")
+            yield f"data: {json.dumps({'type': 'error', 'data': 'No API key provided. Please enter your API key via the key icon in the sidebar.'})}\n\n"
+        return StreamingResponse(no_key(), media_type="text/event-stream", headers={"Cache-Control": "no-cache"})
 
     async def generate():
         try:
