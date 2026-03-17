@@ -39,6 +39,7 @@ DocuMind is a Retrieval Augmented Generation (RAG) chatbot that lets you have na
 
 <img width="1440" height="858" alt="Screenshot 2026-03-17 at 5 10 28 PM" src="https://github.com/user-attachments/assets/ce86df43-6142-4257-b720-253c869a0981" />
 
+<img width="1440" height="857" alt="Screenshot 2026-03-17 at 5 12 42 PM" src="https://github.com/user-attachments/assets/7dab16f8-e331-4b29-ae23-8411f1d81f54" />
 
 
 
