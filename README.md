@@ -1,4 +1,4 @@
-# DocuMind — AI Document Assistant
+# DocuMind - AI Document Assistant
 
 > Chat with your PDF documents. Get accurate, cited answers powered by your choice of AI provider.
 
