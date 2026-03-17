@@ -41,6 +41,15 @@ DocuMind is a Retrieval Augmented Generation (RAG) chatbot that lets you have na
 
 <img width="1440" height="857" alt="Screenshot 2026-03-17 at 5 12 42 PM" src="https://github.com/user-attachments/assets/7dab16f8-e331-4b29-ae23-8411f1d81f54" />
 
+## Runway Ml deployment 
+<img width="1440" height="785" alt="Screenshot 2026-03-17 at 5 14 47 PM" src="https://github.com/user-attachments/assets/1d73450c-4e85-42e6-8fb9-a450886ac67a" />
+
+### Backend:
+<img width="1436" height="781" alt="Screenshot 2026-03-17 at 5 15 36 PM" src="https://github.com/user-attachments/assets/290af748-3c8d-4a59-a662-ae783dc3d8f2" />
+
+### frontend:
+
+<img width="1434" height="850" alt="Screenshot 2026-03-17 at 5 17 02 PM" src="https://github.com/user-attachments/assets/d1e56b2b-380c-421c-92f8-a7c35a4e0e9c" />
 
 
 ## Quick Start (Local Development)
