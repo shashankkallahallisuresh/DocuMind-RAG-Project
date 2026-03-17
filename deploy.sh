@@ -1,11 +1,20 @@
 #!/bin/bash
 # DocuMind — Railway Deployment Script
 # Run this AFTER: railway login
+#
+# Set your API key before running:
+#   export OPENROUTER_API_KEY="sk-or-v1-..."
 
 set -e
 
-ROOT="/Users/shashu/Documents/ai-tools-wiki-rag"
+ROOT="$(cd "$(dirname "$0")" && pwd)"
 RAILWAY="railway"
+
+if [ -z "$OPENROUTER_API_KEY" ]; then
+  echo "ERROR: OPENROUTER_API_KEY is not set."
+  echo "Run: export OPENROUTER_API_KEY='your-key-here'"
+  exit 1
+fi
 
 echo ""
 echo "================================================"
@@ -24,9 +33,8 @@ echo "→ Deploying backend service..."
 cd "$ROOT/backend"
 $RAILWAY service create --name "backend" 2>/dev/null || true
 $RAILWAY variables set \
-  OPENROUTER_API_KEY="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" \
   CLAUDE_MODEL="anthropic/claude-sonnet-4-5" \
-  EMBEDDING_MODEL="all-mpnet-base-v2" \
+  EMBEDDING_MODEL="all-MiniLM-L6-v2" \
   CHUNK_SIZE="512" \
   CHUNK_OVERLAP="50" \
   TOP_K_CHUNKS="5" \
@@ -60,5 +68,4 @@ echo "  Backend: https://$BACKEND_URL"
 echo "  Check dashboard: https://railway.app/dashboard"
 echo "================================================"
 echo ""
-echo "NOTE: First deploy takes 5-10 min (building Docker images)."
-echo "The backend will also download the 420MB embedding model on first start."
+echo "NOTE: First deploy takes 5-10 min (building Nixpacks image)."

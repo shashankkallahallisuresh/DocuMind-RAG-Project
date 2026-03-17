@@ -1,5 +1,14 @@
-# Secrets
+# Secrets — never commit these
 backend/.env
+backend/.env.*
+.env
+.env.*
+
+# Claude Code internals
+.claude/
+
+# Deployment scripts contain env vars — use env vars instead
+# deploy.sh is kept tracked but must never contain real keys
 
 # Build artifacts & data
 backend/venv/
