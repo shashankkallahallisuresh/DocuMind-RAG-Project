@@ -2,7 +2,7 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "npm start"
+startCommand = "npx next start -p $PORT"
 numReplicas = 1
 sleepApplication = false
 restartPolicyType = "ON_FAILURE"
