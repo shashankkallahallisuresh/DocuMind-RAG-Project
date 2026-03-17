@@ -15,14 +15,18 @@ RUN pip install --no-cache-dir torch --extra-index-url https://download.pytorch.
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Pre-download the embedding model at build time so first request is instant
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-mpnet-base-v2')"
+# Pre-download the embedding model at build time
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
 
 # Copy application code and PDFs
 COPY . .
 
 # Ensure directories exist
 RUN mkdir -p pdfs chroma_db
+
+# Pre-index all PDFs into ChromaDB at build time
+# This runs once during build — zero embedding work at runtime
+RUN python preindex.py
 
 EXPOSE 8000
 

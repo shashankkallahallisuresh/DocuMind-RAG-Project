@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     CLAUDE_MODEL: str = "anthropic/claude-sonnet-4-5"
     CHROMA_PATH: str = "./chroma_db"
     PDF_DIR: str = "./pdfs"
-    EMBEDDING_MODEL: str = "all-mpnet-base-v2"
+    EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
     MAX_HISTORY_TURNS: int = 10
     TOP_K_CHUNKS: int = 5
     CHUNK_SIZE: int = 512
