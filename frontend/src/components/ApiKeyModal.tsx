@@ -15,8 +15,8 @@ export function ApiKeyModal({ onSave, onClose, isRequired = true }: Props) {
 
   const handleSave = () => {
     const trimmed = value.trim();
-    if (!trimmed.startsWith("sk-or-")) {
-      setError("Key must start with sk-or- (OpenRouter API key)");
+    if (!trimmed) {
+      setError("Please enter an API key");
       return;
     }
     onSave(trimmed);
@@ -48,7 +48,7 @@ export function ApiKeyModal({ onSave, onClose, isRequired = true }: Props) {
 
         {/* Body */}
         <p className="text-[13px] text-gray-600 dark:text-white/50 mb-4 leading-relaxed">
-          Enter your OpenRouter API key. It&apos;s stored only in your browser and sent directly to OpenRouter.
+          Enter your API key. It&apos;s stored only in your browser and sent directly with each request.
         </p>
 
         <input
@@ -56,7 +56,7 @@ export function ApiKeyModal({ onSave, onClose, isRequired = true }: Props) {
           value={value}
           onChange={(e) => { setValue(e.target.value); setError(""); }}
           onKeyDown={(e) => e.key === "Enter" && handleSave()}
-          placeholder="sk-or-v1-..."
+          placeholder="sk-..."
           className="w-full px-3.5 py-2.5 rounded-xl text-[13px] bg-gray-50 dark:bg-white/[0.05] border border-gray-200 dark:border-white/[0.09] text-gray-900 dark:text-white/90 placeholder-gray-400 dark:placeholder-white/20 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500/60 transition-all mb-2"
         />
 
@@ -78,7 +78,7 @@ export function ApiKeyModal({ onSave, onClose, isRequired = true }: Props) {
           rel="noopener noreferrer"
           className="flex items-center justify-center gap-1.5 text-[11px] text-blue-500 dark:text-blue-400 hover:underline"
         >
-          Get a free OpenRouter API key
+          Get a free API key from OpenRouter
           <ExternalLink size={10} />
         </a>
       </div>
