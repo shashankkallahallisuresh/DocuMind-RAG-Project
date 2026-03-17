@@ -17,9 +17,9 @@ export function MessageEntry({ userMessage, assistantMessage }: Props) {
   const hasSources = (assistantMessage?.sources ?? []).length > 0;
 
   return (
-    <div className="py-10 border-b border-white/[0.05] last:border-0">
+    <div className="py-10 border-b border-gray-100 dark:border-white/[0.05] last:border-0">
       {/* User question */}
-      <h2 className="text-2xl font-semibold text-white/90 mb-7 leading-snug">
+      <h2 className="text-2xl font-semibold text-gray-900 dark:text-white/90 mb-7 leading-snug">
         {userMessage.content}
       </h2>
 
@@ -44,7 +44,7 @@ export function MessageEntry({ userMessage, assistantMessage }: Props) {
                 {[0, 150, 300].map((delay) => (
                   <span
                     key={delay}
-                    className="w-1.5 h-1.5 rounded-full bg-white/20"
+                    className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-white/20"
                     style={{ animation: `bounce 1.2s ${delay}ms ease-in-out infinite` }}
                   />
                 ))}
@@ -52,7 +52,7 @@ export function MessageEntry({ userMessage, assistantMessage }: Props) {
             )}
 
             {hasContent && (
-              <div className="prose prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-p:text-white/80 prose-headings:text-white/90 prose-strong:text-white/90 prose-li:text-white/80">
+              <div className="prose prose-sm max-w-none dark:prose-invert prose-p:leading-relaxed prose-p:text-gray-700 dark:prose-p:text-white/80 prose-headings:text-gray-900 dark:prose-headings:text-white/90 prose-strong:text-gray-900 dark:prose-strong:text-white/90 prose-li:text-gray-700 dark:prose-li:text-white/80">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {assistantMessage.content + (isStreaming ? "\u00A0▋" : "")}
                 </ReactMarkdown>

@@ -1,9 +1,10 @@
+from typing import Optional
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    OPENROUTER_API_KEY: str
+    OPENROUTER_API_KEY: Optional[str] = None
     CLAUDE_MODEL: str = "anthropic/claude-sonnet-4-5"
     CHROMA_PATH: str = "./chroma_db"
     PDF_DIR: str = "./pdfs"

@@ -20,12 +20,13 @@ export async function sendChatMessage(
   onToken: (token: string) => void,
   onSources: (sources: Source[]) => void,
   onDone: () => void,
-  onError: (msg: string) => void
+  onError: (msg: string) => void,
+  apiKey?: string
 ): Promise<void> {
   const response = await fetch(`${API_URL}/api/chat`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ session_id: sessionId, message }),
+    body: JSON.stringify({ session_id: sessionId, message, api_key: apiKey }),
   });
 
   if (!response.ok) {

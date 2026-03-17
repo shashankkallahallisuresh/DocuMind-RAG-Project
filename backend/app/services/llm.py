@@ -21,11 +21,7 @@ Context from documents:
 
 
 class LLMService:
-    def __init__(self, api_key: str, model: str):
-        self.client = AsyncOpenAI(
-            base_url=OPENROUTER_BASE_URL,
-            api_key=api_key,
-        )
+    def __init__(self, model: str):
         self.model = model
         logger.info(f"LLM service initialized via OpenRouter with model: {model}")
 
@@ -34,7 +30,9 @@ class LLMService:
         message: str,
         context: str,
         history: List[Dict[str, str]],
+        api_key: str,
     ) -> AsyncGenerator[str, None]:
+        client = AsyncOpenAI(base_url=OPENROUTER_BASE_URL, api_key=api_key)
         system = SYSTEM_PROMPT.format(context=context)
 
         messages = [{"role": "system", "content": system}]
@@ -42,7 +40,7 @@ class LLMService:
             messages.append({"role": turn["role"], "content": turn["content"]})
         messages.append({"role": "user", "content": message})
 
-        stream = await self.client.chat.completions.create(
+        stream = await client.chat.completions.create(
             model=self.model,
             messages=messages,
             max_tokens=2048,

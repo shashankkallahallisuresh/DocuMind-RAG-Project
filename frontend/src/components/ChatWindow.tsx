@@ -37,10 +37,10 @@ export function ChatWindow({ messages, isLoading }: Props) {
           <BookOpenText size={22} className="text-white" />
         </div>
 
-        <h1 className="text-[22px] font-semibold text-white/90 mb-1.5 text-center">
+        <h1 className="text-[22px] font-semibold text-gray-900 dark:text-white/90 mb-1.5 text-center">
           What do you want to know?
         </h1>
-        <p className="text-sm text-white/35 text-center mb-8 max-w-sm">
+        <p className="text-sm text-gray-500 dark:text-white/35 text-center mb-8 max-w-sm">
           Ask anything about your AI tools documentation.
           I&apos;ll find answers with source citations.
         </p>
@@ -50,10 +50,10 @@ export function ChatWindow({ messages, isLoading }: Props) {
           {SUGGESTED.map((s) => (
             <div
               key={s}
-              className="flex items-start gap-2.5 px-4 py-3 rounded-2xl border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/[0.12] transition-all cursor-default"
+              className="flex items-start gap-2.5 px-4 py-3 rounded-2xl border border-gray-200 dark:border-white/[0.07] bg-gray-50 dark:bg-white/[0.03] hover:bg-gray-100 dark:hover:bg-white/[0.06] hover:border-gray-300 dark:hover:border-white/[0.12] transition-all cursor-default"
             >
-              <FileText size={12} className="flex-shrink-0 mt-0.5 text-white/20" />
-              <span className="text-[12px] text-white/50 leading-snug">{s}</span>
+              <FileText size={12} className="flex-shrink-0 mt-0.5 text-gray-400 dark:text-white/20" />
+              <span className="text-[12px] text-gray-500 dark:text-white/50 leading-snug">{s}</span>
             </div>
           ))}
         </div>

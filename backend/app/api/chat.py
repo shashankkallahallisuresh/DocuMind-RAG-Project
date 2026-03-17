@@ -38,6 +38,12 @@ async def chat(request: ChatRequest, req: Request):
     sources = vector_store.search(query_embedding, top_k=settings.TOP_K_CHUNKS)
     context = format_context(sources)
 
+    api_key = request.api_key or get_settings().OPENROUTER_API_KEY
+    if not api_key:
+        async def no_key():
+            yield f"data: {json.dumps({'type': 'error', 'data': 'No API key provided. Please configure your OpenRouter API key.'})}\n\n"
+        return StreamingResponse(no_key(), media_type="text/event-stream")
+
     async def generate():
         try:
             # Send sources metadata first so UI can render citations immediately
@@ -45,7 +51,7 @@ async def chat(request: ChatRequest, req: Request):
 
             full_response = ""
             async for token in llm_service.stream_response(
-                request.message, context, capped_history
+                request.message, context, capped_history, api_key
             ):
                 full_response += token
                 yield f"data: {json.dumps({'type': 'token', 'data': token})}\n\n"

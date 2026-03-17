@@ -11,7 +11,7 @@ export interface Message {
   isStreaming?: boolean;
 }
 
-export function useChat(sessionId: string) {
+export function useChat(sessionId: string, apiKey?: string) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,7 +74,8 @@ export function useChat(sessionId: string) {
             setError(errMsg);
             setMessages((prev) => prev.filter((m) => m.id !== assistantId));
             setIsLoading(false);
-          }
+          },
+          apiKey
         );
       } catch (err) {
         setError("Connection failed. Is the backend running?");
@@ -82,7 +83,7 @@ export function useChat(sessionId: string) {
         setIsLoading(false);
       }
     },
-    [sessionId, isLoading]
+    [sessionId, isLoading, apiKey]
   );
 
   const clearMessages = useCallback(() => setMessages([]), []);

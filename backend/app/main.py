@@ -53,7 +53,7 @@ async def lifespan(app: FastAPI):
 
     app.state.embedding_service = EmbeddingService(settings.EMBEDDING_MODEL)
     app.state.vector_store = VectorStore(settings.CHROMA_PATH)
-    app.state.llm_service = LLMService(settings.OPENROUTER_API_KEY, settings.CLAUDE_MODEL)
+    app.state.llm_service = LLMService(settings.CLAUDE_MODEL)
 
     await auto_index_pdfs(app)
     logger.info("Startup complete — ready to serve requests")

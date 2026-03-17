@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/Sidebar";
 import { ChatWindow } from "@/components/ChatWindow";
 import { InputBar } from "@/components/InputBar";
+import { ApiKeyModal } from "@/components/ApiKeyModal";
 import { useChat } from "@/hooks/useChat";
 import { clearSession, getDocuments } from "@/lib/api";
+
+const API_KEY_STORAGE = "documind-api-key";
+const THEME_STORAGE = "rag-theme";
 
 export default function Home() {
   const [sessionId, setSessionId] = useState("");
   const [isDark, setIsDark] = useState(true);
   const [documents, setDocuments] = useState<string[]>([]);
+  const [apiKey, setApiKey] = useState<string>("");
+  const [showApiModal, setShowApiModal] = useState(false);
 
   useEffect(() => {
     // Session
@@ -18,10 +24,15 @@ export default function Home() {
     if (!id) { id = crypto.randomUUID(); sessionStorage.setItem("rag-session-id", id); }
     setSessionId(id);
 
-    // Theme
-    const saved = localStorage.getItem("rag-theme") ?? "dark";
+    // Theme — default to dark
+    const saved = localStorage.getItem(THEME_STORAGE) ?? "dark";
     setIsDark(saved === "dark");
     document.documentElement.classList.toggle("dark", saved === "dark");
+
+    // API key
+    const storedKey = localStorage.getItem(API_KEY_STORAGE) ?? "";
+    setApiKey(storedKey);
+    if (!storedKey) setShowApiModal(true);
 
     // Fetch document list for sidebar
     getDocuments().then((r) => setDocuments(r.documents)).catch(() => {});
@@ -30,11 +41,17 @@ export default function Home() {
   const toggleTheme = () => {
     const next = !isDark;
     setIsDark(next);
-    localStorage.setItem("rag-theme", next ? "dark" : "light");
+    localStorage.setItem(THEME_STORAGE, next ? "dark" : "light");
     document.documentElement.classList.toggle("dark", next);
   };
 
-  const { messages, isLoading, error, sendMessage, clearMessages } = useChat(sessionId);
+  const handleSaveApiKey = (key: string) => {
+    setApiKey(key);
+    localStorage.setItem(API_KEY_STORAGE, key);
+    setShowApiModal(false);
+  };
+
+  const { messages, isLoading, error, sendMessage, clearMessages } = useChat(sessionId, apiKey);
 
   const handleNewChat = async () => {
     if (sessionId) await clearSession(sessionId).catch(() => {});
@@ -45,11 +62,20 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen bg-[#111111] overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-[#111111] overflow-hidden">
+      {showApiModal && (
+        <ApiKeyModal
+          onSave={handleSaveApiKey}
+          onClose={() => setShowApiModal(false)}
+          isRequired={!apiKey}
+        />
+      )}
+
       <Sidebar
         isDark={isDark}
         onToggleTheme={toggleTheme}
         onNewChat={handleNewChat}
+        onOpenApiKey={() => setShowApiModal(true)}
         documents={documents}
       />
 
@@ -57,7 +83,7 @@ export default function Home() {
         <ChatWindow messages={messages} isLoading={isLoading} />
 
         {error && (
-          <div className="px-6 py-2 text-xs text-red-400 text-center bg-red-950/20 border-t border-red-900/30">
+          <div className="px-6 py-2 text-xs text-red-500 dark:text-red-400 text-center bg-red-50 dark:bg-red-950/20 border-t border-red-200 dark:border-red-900/30">
             {error}
           </div>
         )}

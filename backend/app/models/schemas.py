@@ -1,10 +1,11 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 
 class ChatRequest(BaseModel):
     session_id: str
     message: str
+    api_key: Optional[str] = None
 
 
 class Source(BaseModel):
