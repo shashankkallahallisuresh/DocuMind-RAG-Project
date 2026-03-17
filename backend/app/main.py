@@ -18,33 +18,47 @@ logger = logging.getLogger(__name__)
 
 async def auto_index_pdfs(app: FastAPI) -> None:
     """Index any PDFs in PDF_DIR that haven't been indexed yet."""
-    settings = get_settings()
-    pdf_dir = settings.PDF_DIR
+    try:
+        settings = get_settings()
+        pdf_dir = settings.PDF_DIR
 
-    if not os.path.exists(pdf_dir):
-        logger.warning(f"PDF directory '{pdf_dir}' not found — skipping auto-index")
-        return
+        if not os.path.exists(pdf_dir):
+            logger.warning(f"PDF directory '{pdf_dir}' not found — skipping auto-index")
+            return
 
-    pdf_files = [f for f in os.listdir(pdf_dir) if f.lower().endswith(".pdf")]
-    logger.info(f"Found {len(pdf_files)} PDFs in {pdf_dir}: {pdf_files}")
+        pdf_files = [f for f in os.listdir(pdf_dir) if f.lower().endswith(".pdf")]
+        logger.info(f"Found {len(pdf_files)} PDFs in {pdf_dir}: {pdf_files}")
 
-    for pdf_file in pdf_files:
-        if app.state.vector_store.document_exists(pdf_file):
-            logger.info(f"Already indexed: {pdf_file}")
-            continue
+        for pdf_file in pdf_files:
+            try:
+                if app.state.vector_store.document_exists(pdf_file):
+                    logger.info(f"Already indexed: {pdf_file}")
+                    continue
 
-        file_path = os.path.join(pdf_dir, pdf_file)
-        logger.info(f"Indexing: {pdf_file} ...")
+                file_path = os.path.join(pdf_dir, pdf_file)
+                logger.info(f"Indexing: {pdf_file} ...")
 
-        chunks = parse_pdf(file_path, settings.CHUNK_SIZE, settings.CHUNK_OVERLAP)
-        if not chunks:
-            logger.warning(f"No text extracted from {pdf_file}")
-            continue
+                chunks = parse_pdf(file_path, settings.CHUNK_SIZE, settings.CHUNK_OVERLAP)
+                if not chunks:
+                    logger.warning(f"No text extracted from {pdf_file}")
+                    continue
 
-        texts = [c["text"] for c in chunks]
-        embeddings = await app.state.embedding_service.aembed(texts)
-        app.state.vector_store.add_chunks(chunks, embeddings)
-        logger.info(f"Indexed {len(chunks)} chunks from {pdf_file}")
+                # Embed in batches of 32 to reduce peak memory usage
+                batch_size = 32
+                all_embeddings = []
+                for i in range(0, len(chunks), batch_size):
+                    batch = [c["text"] for c in chunks[i:i + batch_size]]
+                    batch_embeddings = await app.state.embedding_service.aembed(batch)
+                    all_embeddings.extend(batch_embeddings)
+
+                app.state.vector_store.add_chunks(chunks, all_embeddings)
+                logger.info(f"Indexed {len(chunks)} chunks from {pdf_file}")
+
+            except Exception as e:
+                logger.error(f"Failed to index {pdf_file}: {e}", exc_info=True)
+
+    except Exception as e:
+        logger.error(f"Auto-index task failed: {e}", exc_info=True)
 
 
 @asynccontextmanager
