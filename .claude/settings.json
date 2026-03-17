@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/**)",
+      "Bash(pyenv versions:*)",
+      "Bash(source backend/venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(/Users/shashu/Documents/ai-tools-wiki-rag/backend/.env:*)",
+      "Bash(~/.nvm/versions/node/v20.20.1/bin/node --version)",
+      "Bash(~/.nvm/versions/node/v20.20.1/bin/npm --version)",
+      "Bash(NODE_BIN=~/.nvm/versions/node/v20.20.1/bin PATH=\"$NODE_BIN:$PATH\" $NODE_BIN/node $NODE_BIN/../lib/node_modules/npm/bin/npm-cli.js install --prefix /Users/shashu/Documents/ai-tools-wiki-rag/frontend)",
+      "Bash(NODE_BIN=~/.nvm/versions/node/v20.20.1/bin)",
+      "Bash(PATH=\"$NODE_BIN:$PATH\" $NODE_BIN/node $NODE_BIN/../lib/node_modules/npm/bin/npm-cli.js install --prefix /Users/shashu/Documents/ai-tools-wiki-rag/frontend)"
+    ],
+    "additionalDirectories": [
+      "/Users/shashu/Documents/ai-tools-wiki-rag/backend/app"
+    ]
+  }
+}

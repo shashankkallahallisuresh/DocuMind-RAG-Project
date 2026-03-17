@@ -1,0 +1,17 @@
+# Secrets
+backend/.env
+
+# Build artifacts & data
+backend/venv/
+backend/chroma_db/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/**/*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+
+# OS
+.DS_Store
