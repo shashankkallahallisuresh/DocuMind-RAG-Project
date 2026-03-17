@@ -1,8 +1,17 @@
 [build]
-builder = "DOCKERFILE"
-dockerfilePath = "Dockerfile"
+builder = "NIXPACKS"
+
+[build.nixpacksPlan.phases.install]
+cmds = [
+  "pip install torch --extra-index-url https://download.pytorch.org/whl/cpu",
+  "pip install -r requirements.txt"
+]
+
+[build.nixpacksPlan.phases.build]
+cmds = ["python preindex.py"]
 
 [deploy]
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 numReplicas = 1
 sleepApplication = false
 restartPolicyType = "ON_FAILURE"
