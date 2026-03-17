@@ -1,3 +1,4 @@
+import asyncio
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -55,8 +56,9 @@ async def lifespan(app: FastAPI):
     app.state.vector_store = VectorStore(settings.CHROMA_PATH)
     app.state.llm_service = LLMService(settings.CLAUDE_MODEL)
 
-    await auto_index_pdfs(app)
-    logger.info("Startup complete — ready to serve requests")
+    # Index PDFs in the background so server starts accepting requests immediately
+    asyncio.create_task(auto_index_pdfs(app))
+    logger.info("Startup complete — ready to serve requests (indexing in background)")
 
     yield
 
